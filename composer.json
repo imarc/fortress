@@ -1,0 +1,27 @@
+{
+	"name": "imarc/fortress",
+	"description": "Request/response based authorization with pluggable gateways",
+	"keywords": ["authentication"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Matthew J. Sahagian",
+			"email": "matt@imarc.com",
+			"role": "Lead Architect / Developer"
+		},
+		{
+			"name": "Brian Tam",
+			"email": "brian@imarc.net",
+			"role": "Junior Architect"
+		}
+	],
+	"require-dev": {
+		"dotink/lab": "^1.2.0"
+	},
+	"require": {
+		"php": ">=5.6.0"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	}
+}
