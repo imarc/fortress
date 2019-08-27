@@ -9,6 +9,6 @@ interface UserProvider
 {
 	public function getData($token);
 	public function getName();
-	public function initialize(Request $request, Response $response);
+	public function initialize(Request $request, Response $response = NULL);
 	public function setGateway(Gateway $gateway);
 }

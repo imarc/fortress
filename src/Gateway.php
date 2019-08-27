@@ -67,7 +67,7 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function login(Request $request, Response $response)
+	public function login(Request $request, Response $response = NULL)
 	{
 		if (!$this->provider) {
 			$this->load($request);
