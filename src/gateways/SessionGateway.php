@@ -29,18 +29,20 @@ class SessionGateway extends Gateway
 	/**
 	 *
 	 */
-	protected function load($request)
+	protected function load(Request $request): Gateway
 	{
 		$this->provider = $this->getFromSession(static::PROVIDER_KEY);
 		$this->token    = $this->getFromSession(static::TOKEN_KEY);
 		$this->id       = $this->getFromSession(static::ID_KEY);
+
+		return $this;
 	}
 
 
 	/**
 	 *
 	 */
-	protected function save($response)
+	protected function save(Response $response): Response
 	{
 		$_SESSION[static::PROVIDER_KEY] = $this->provider;
 		$_SESSION[static::TOKEN_KEY]    = $this->token;

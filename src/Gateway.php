@@ -2,6 +2,7 @@
 
 namespace Fortress;
 
+use Psr\Http\Message\ResponseFactoryInterface as ResponseFactory;
 use Psr\Http\Message\RequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -49,17 +50,37 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function __construct(UserResolver $resolver)
+	protected $response_factory = NULL;
+
+
+	/**
+	 *
+	 */
+	abstract protected function load(Request $request): Gateway;
+
+	/**
+	 *
+	 */
+	abstract protected function save(Response $response): Response;
+
+
+	/**
+	 *
+	 */
+	public function __construct(ResponseFactory $response_factory, UserResolver $resolver)
 	{
-		$this->resolver = $resolver;
+		$this->resolver        = $resolver;
+		$this->responseFactory = $response_factory;
 	}
 
 
 	/**
 	 *
 	 */
-	public function getUser()
+	public function getUser(Request $request)
 	{
+		$this->load($request);
+
 		return $this->resolver->fetch($this->id);
 	}
 
@@ -67,17 +88,9 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function login(Request $request, Response $response = NULL)
+	public function login(string $provider, Request $request): Response
 	{
-		if (!$this->provider) {
-			$this->load($request);
-
-			if (!$this->provider) {
-				return $response;
-			}
-		}
-
-		if (!isset($this->providers[$this->provider])) {
+		if (!isset($this->providers[$provider])) {
 			throw new InvalidProviderException(sprintf(
 				'The specified provider "%s" is not available',
 				$this->provider
@@ -85,13 +98,14 @@ abstract class Gateway
 		}
 
 		$provider = $this->providers[$this->provider];
+		$response = $this->responseFactory->createResponse();
 
 		if (!$this->token) {
 			$response = $provider->initialize($request, $response);
 		}
 
 		if (!$this->id) {
-			$data = $provider->getData($this->token);
+			$data = $provider->resolve($this->token);
 
 			if (isset($this->mappers[$this->provider])) {
 				$id = $this->mappers[$this->provider]->map($data);
@@ -106,23 +120,24 @@ abstract class Gateway
 	}
 
 
+
 	/**
 	 *
 	 */
-	public function logout(Request $request, Response $response)
+	public function logout(Request $request): Response
 	{
 		$this->setId(NULL);
 		$this->setToken(NULL);
 		$this->setProvider(NULL);
 
-		return $this->save($response);
+		return $this->save($this->responseFactory->createResponse());
 	}
 
 
 	/**
 	 *
 	 */
-	public function register(UserProvider $provider, UserMapper $mapper = NULL)
+	public function register(UserProvider $provider, UserMapper $mapper = NULL): Gateway
 	{
 		$provider_name = $provider->getName();
 
@@ -148,7 +163,7 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function setId($id)
+	public function setId($id): Gateway
 	{
 		$this->id = $id;
 
@@ -159,7 +174,7 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function setProvider($provider)
+	public function setProvider($provider): Gateway
 	{
 		$this->provider = $provider;
 
@@ -170,20 +185,10 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function setToken($token)
+	public function setToken($token): Gateway
 	{
 		$this->token = $token;
 
 		return $this;
 	}
-
-	/**
-	 *
-	 */
-	abstract protected function load($request);
-
-	/**
-	 *
-	 */
-	abstract protected function save($response);
 }

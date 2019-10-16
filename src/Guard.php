@@ -7,7 +7,7 @@ use InvalidArgumentException;
 /**
  *
  */
-class Firewall
+class Guard
 {
 	/**
 	 *
@@ -52,11 +52,6 @@ class Firewall
 		}
 
 		return $this->granted;
-
-		if (!$this->granted) {
-		}
-
-		return $next($request, $response);
 	}
 
 
