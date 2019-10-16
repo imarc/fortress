@@ -97,7 +97,7 @@ abstract class Gateway
 			));
 		}
 
-		$provider = $this->providers[$this->provider];
+		$provider = $this->providers[$provider];
 		$response = $this->responseFactory->createResponse();
 
 		if (!$this->token) {
