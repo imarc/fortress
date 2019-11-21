@@ -14,10 +14,10 @@ class Director
 	/**
 	 *
 	 */
-	public function __construct(ResponseFactory $factory, Director ...$directors)
+	public function __construct(ResponseFactory $factory, Destination ...$destinations)
 	{
-		$this->directors = $directors;
-		$this->factory   = $factory;
+		$this->destinations = $destinations;
+		$this->factory      = $factory;
 	}
 
 
@@ -26,15 +26,15 @@ class Director
 	 */
 	public function redirect(Request $request): Response
 	{
-		foreach ($this->directors as $director) {
-			if ($director->match($request)) {
-				return $director($request, $this->factory->createResponse());
+		foreach ($this->destinations as $destination) {
+			if ($destination->match($request)) {
+				return $destination($request, $this->factory->createResponse());
 			}
 		}
 
 		return $this->factory
 			->createResponse()
-			->withStatus(301)
+			->withStatus(303)
 			->withHeader('Location', (string) $request->getUri())
 		;
 	}
