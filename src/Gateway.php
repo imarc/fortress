@@ -14,6 +14,18 @@ abstract class Gateway
 	/**
 	 *
 	 */
+	protected $director = NULL;
+
+
+	/**
+	 *
+	 */
+	protected $factory = NULL;
+
+
+	/**
+	 *
+	 */
 	protected $id = NULL;
 
 
@@ -21,12 +33,6 @@ abstract class Gateway
 	 *
 	 */
 	protected $mappers = array();
-
-
-	/**
-	 *
-	 */
-	protected $provider = NULL;
 
 
 	/**
@@ -50,12 +56,6 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	protected $response_factory = NULL;
-
-
-	/**
-	 *
-	 */
 	abstract protected function load(Request $request): Gateway;
 
 	/**
@@ -67,19 +67,11 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function __construct(ResponseFactory $response_factory, UserResolver $resolver)
+	public function __construct(ResponseFactory $factory, UserResolver $resolver, Director $director)
 	{
-		$this->resolver        = $resolver;
-		$this->responseFactory = $response_factory;
-	}
-
-
-	/**
-	 *
-	 */
-	public function getId()
-	{
-		return $this->id;
+		$this->director = $director;
+		$this->resolver = $resolver;
+		$this->factory  = $factory;
 	}
 
 
@@ -97,14 +89,6 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function getToken()
-	{
-		return $this->token;
-	}
-
-	/**
-	 *
-	 */
 	public function login(string $provider, Request $request): Response
 	{
 		$this->load($request);
@@ -112,12 +96,16 @@ abstract class Gateway
 		if (!isset($this->providers[$provider])) {
 			throw new InvalidProviderException(sprintf(
 				'The specified provider "%s" is not available',
-				$this->provider
+				$provider
 			));
 		}
 
 		$provider = $this->providers[$provider];
-		$response = $provider->initialize($request);
+		$response = $this->factory->createResponse();
+
+		if (!$this->token) {
+			$response = $provider->initialize($request);
+		}
 
 		if (!$this->id) {
 			$data = $provider->resolve($this->token);
@@ -142,10 +130,11 @@ abstract class Gateway
 	public function logout(Request $request): Response
 	{
 		$this->load($request);
+
 		$this->setId(NULL);
 		$this->setToken(NULL);
 
-		return $this->save($this->responseFactory->createResponse());
+		return $this->save($this->factory->createResponse());
 	}
 
 

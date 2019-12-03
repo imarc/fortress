@@ -29,8 +29,9 @@ class SessionGateway extends Gateway
 	 */
 	protected function load(Request $request): Gateway
 	{
-		$this->token = $this->getFromSession(static::TOKEN_KEY);
-		$this->id    = $this->getFromSession(static::ID_KEY);
+		$this->request = $request;
+		$this->token   = $this->getFromSession(static::TOKEN_KEY);
+		$this->id      = $this->getFromSession(static::ID_KEY);
 
 		return $this;
 	}
@@ -43,6 +44,10 @@ class SessionGateway extends Gateway
 	{
 		$_SESSION[static::TOKEN_KEY] = $this->token;
 		$_SESSION[static::ID_KEY]    = $this->id;
+
+		if ($response->getStatusCode() == 200) {
+			return $this->director->redirect($this->request);
+		}
 
 		return $response;
 	}
