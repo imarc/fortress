@@ -77,6 +77,15 @@ abstract class Gateway
 	/**
 	 *
 	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+
+	/**
+	 *
+	 */
 	public function getUser(Request $request)
 	{
 		$this->load($request);
@@ -88,8 +97,18 @@ abstract class Gateway
 	/**
 	 *
 	 */
+	public function getToken()
+	{
+		return $this->token;
+	}
+
+	/**
+	 *
+	 */
 	public function login(string $provider, Request $request): Response
 	{
+		$this->load($request);
+
 		if (!isset($this->providers[$provider])) {
 			throw new InvalidProviderException(sprintf(
 				'The specified provider "%s" is not available',
@@ -98,17 +117,13 @@ abstract class Gateway
 		}
 
 		$provider = $this->providers[$provider];
-		$response = $this->responseFactory->createResponse();
-
-		if (!$this->token) {
-			$response = $provider->initialize($request, $response);
-		}
+		$response = $provider->initialize($request);
 
 		if (!$this->id) {
 			$data = $provider->resolve($this->token);
 
-			if (isset($this->mappers[$this->provider])) {
-				$id = $this->mappers[$this->provider]->map($data);
+			if (isset($this->mappers[$provider->getName()])) {
+				$id = $this->mappers[$provider->getName()]->map($data);
 			} else {
 				$id = $data;
 			}
@@ -126,9 +141,9 @@ abstract class Gateway
 	 */
 	public function logout(Request $request): Response
 	{
+		$this->load($request);
 		$this->setId(NULL);
 		$this->setToken(NULL);
-		$this->setProvider(NULL);
 
 		return $this->save($this->responseFactory->createResponse());
 	}
@@ -166,17 +181,6 @@ abstract class Gateway
 	public function setId($id): Gateway
 	{
 		$this->id = $id;
-
-		return $this;
-	}
-
-
-	/**
-	 *
-	 */
-	public function setProvider($provider): Gateway
-	{
-		$this->provider = $provider;
 
 		return $this;
 	}
