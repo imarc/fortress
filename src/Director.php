@@ -24,11 +24,11 @@ class Director
 	/**
 	 *
 	 */
-	public function redirect(Request $request): Response
+	public function redirect(Gateway $gateway, Request $request): Response
 	{
 		foreach ($this->destinations as $destination) {
 			if ($destination->match($request)) {
-				return $destination($request, $this->factory->createResponse());
+				return $destination($gateway, $request, $this->factory->createResponse());
 			}
 		}
 

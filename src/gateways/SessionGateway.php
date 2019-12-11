@@ -46,7 +46,7 @@ class SessionGateway extends Gateway
 		$_SESSION[static::ID_KEY]    = $this->id;
 
 		if ($response->getStatusCode() == 200) {
-			return $this->director->redirect($this->request);
+			return $this->director->redirect($this, $this->request);
 		}
 
 		return $response;

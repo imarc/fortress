@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 interface Destination
 {
-	public function __invoke(Request $request, Response $response): Response;
+	public function __invoke(Gateway $gateway, Request $request, Response $response): Response;
 
 	public function match(Request $request): bool;
 }
