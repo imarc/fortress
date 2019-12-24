@@ -56,12 +56,12 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	abstract protected function load(Request $request): Gateway;
+	abstract public function load(Request $request): Gateway;
 
 	/**
 	 *
 	 */
-	abstract protected function save(Response $response): Response;
+	abstract public function save(Response $response = NULL): ?Response;
 
 
 	/**
