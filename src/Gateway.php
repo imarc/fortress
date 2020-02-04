@@ -78,10 +78,8 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function getUser(Request $request)
+	public function getUser()
 	{
-		$this->load($request);
-
 		return $this->resolver->fetch($this->id);
 	}
 
@@ -101,11 +99,7 @@ abstract class Gateway
 		}
 
 		$provider = $this->providers[$provider];
-		$response = $this->factory->createResponse();
-
-		if (!$this->token) {
-			$response = $provider->initialize($request);
-		}
+		$response = $provider->initialize($request);
 
 		if (!$this->id) {
 			$data = $provider->resolve($this->token);
