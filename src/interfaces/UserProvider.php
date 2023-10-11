@@ -35,13 +35,14 @@ interface UserProvider
 	 * exception, you will almost invariably want to handle the possibility of
 	 * a `NULL` token.  In this case, you can safely return `NULL`.
 	 *
+	 * @param mixed $token The token by which to resolve the user.
 	 * @return mixed A user ID or user data to be mapped, NULL if invalid.
 	 */
 	public function resolve($token);
 
 
 	/**
-	 *
+	 * Set the gateway on the user provider.
 	 */
 	public function setGateway(Gateway $gateway): UserProvider;
 }
