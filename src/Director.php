@@ -14,13 +14,13 @@ class Director
 	/**
 	 *
 	 */
-	protected $destinations;
+	public $destinations;
 
 
 	/**
 	 *
 	 */
-	protected $factory;
+	public $factory;
 
 
 	/**

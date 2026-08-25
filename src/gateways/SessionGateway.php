@@ -17,7 +17,7 @@ class SessionGateway extends Gateway
 	/**
 	 *
 	 */
-	protected $request;
+	public $request;
 
 
 	/**
