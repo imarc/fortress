@@ -1,0 +1,16 @@
+src/Director.php
+  h_b44430a3281f44 17,23
+src/gateways/SessionGateway.php
+  h_b44430a3281f44 20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "35545386819a4550cb8341d7ed024d0d9bbd784f",
+  "prompts": {},
+  "humans": {
+    "h_b44430a3281f44": {
+      "author": "Austin Fishbaugh <austinfishbaugh@imarc.com>"
+    }
+  }
+}
