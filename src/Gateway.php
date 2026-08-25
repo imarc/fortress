@@ -61,7 +61,7 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	abstract public function save(Response $response = NULL): ?Response;
+	abstract public function save(?Response $response = NULL): ?Response;
 
 
 	/**
@@ -135,7 +135,7 @@ abstract class Gateway
 	/**
 	 *
 	 */
-	public function register(UserProvider $provider, UserMapper $mapper = NULL): Gateway
+	public function register(UserProvider $provider, ?UserMapper $mapper = NULL): Gateway
 	{
 		$provider_name = $provider->getName();
 

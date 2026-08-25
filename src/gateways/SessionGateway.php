@@ -30,7 +30,7 @@ class SessionGateway extends Gateway
 	/**
 	 *
 	 */
-	public function save(Response $response = NULL): ?Response
+	public function save(?Response $response = NULL): ?Response
 	{
 		$_SESSION[static::TOKEN_KEY] = $this->token;
 		$_SESSION[static::ID_KEY]    = $this->id;
