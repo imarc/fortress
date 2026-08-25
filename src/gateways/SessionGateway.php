@@ -17,6 +17,12 @@ class SessionGateway extends Gateway
 	/**
 	 *
 	 */
+	protected $request;
+
+
+	/**
+	 *
+	 */
 	public function load(Request $request): Gateway
 	{
 		$this->request = $request;

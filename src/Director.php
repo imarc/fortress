@@ -14,6 +14,18 @@ class Director
 	/**
 	 *
 	 */
+	protected $destinations;
+
+
+	/**
+	 *
+	 */
+	protected $factory;
+
+
+	/**
+	 *
+	 */
 	public function __construct(ResponseFactory $factory, Destination ...$destinations)
 	{
 		$this->destinations = $destinations;
